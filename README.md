@@ -1,7 +1,7 @@
 # Exercise 2: Microservice Architecture, Docker & GitHub Actions
 
 **Course:** Continuous Delivery in Agile Software Development (Master)
-**Points:** 30
+**Points:** 24
 
 ## Learning Objectives
 
@@ -59,7 +59,7 @@ curl -X POST http://localhost:8080/products \
 
 ## Tasks
 
-### Task 1: Understand the Architecture (4 Points)
+### Task 1: Understand the Architecture (2 Points)
 
 1. Read the source code and understand how the API handles requests.
 2. Draw a diagram (or describe in text) showing the request flow from HTTP request to database and back.
@@ -69,7 +69,7 @@ curl -X POST http://localhost:8080/products \
 
 ---
 
-### Task 2: Complete the GitHub Actions Workflow (8 Points)
+### Task 2: Complete the GitHub Actions Workflow (6 Points)
 
 The CI workflow (`.github/workflows/ci.yml`) has a `TODO` for a Docker build job. Your tasks:
 
@@ -86,7 +86,7 @@ The CI workflow (`.github/workflows/ci.yml`) has a `TODO` for a Docker build job
 
 ---
 
-### Task 3: Docker & Docker Compose (10 Points)
+### Task 3: Docker & Docker Compose (8 Points)
 
 1. **Analyze the Dockerfile:**
    - Explain each stage of the multi-stage build. Why two stages?
@@ -144,8 +144,8 @@ All tests must use `httptest.NewRecorder` (no actual HTTP server needed).
 
 | Task | Points |
 |------|--------|
-| Architecture Documentation | 4 |
-| GitHub Actions Workflow | 8 |
-| Docker & Docker Compose | 10 |
+| Architecture Documentation | 2 |
+| GitHub Actions Workflow | 6 |
+| Docker & Docker Compose | 8 |
 | Handler Tests | 8 |
-| **Total** | **30** |
+| **Total** | **24** |
