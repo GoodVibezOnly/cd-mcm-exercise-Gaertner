@@ -13,7 +13,7 @@ This repository contains four progressive exercises for the Master course **Cont
 
 ## Technology Stack
 
-- **Language:** Go 1.22+
+- **Language:** Go 1.26+
 - **Web Framework:** Gorilla Mux
 - **Database:** PostgreSQL
 - **Containerization:** Docker & Docker Compose
@@ -70,7 +70,7 @@ By the end of the course, you will have a fully containerized Go microservice wi
 
 ## Prerequisites
 
-- Go 1.22+ installed
+- Go 1.26+ installed
 - Git 2.30+
 - GitHub Account
 - Docker Desktop (from Exercise 2)
