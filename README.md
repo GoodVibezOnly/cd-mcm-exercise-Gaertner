@@ -120,10 +120,17 @@ The CI workflow already has a matrix strategy with one Go version. Your tasks:
    ```yaml
    - name: Check coverage threshold
      run: |
-       COVERAGE=$(go test -coverprofile=coverage.out ./... | grep -oP 'coverage: \K[0-9.]+')
-       echo "Coverage: ${COVERAGE}%"
-       # TODO: Fail if coverage is below 80%
+       go test -coverprofile=coverage.out ./...
+       TOTAL=$(go tool cover -func=coverage.out | grep total | awk '{print $3}' | sed 's/%//')
+       echo "Total coverage: ${TOTAL}%"
+       THRESHOLD=80
+       if [ "$(echo "$TOTAL < $THRESHOLD" | bc)" -eq 1 ]; then
+         echo "::error::Coverage ${TOTAL}% is below threshold ${THRESHOLD}%"
+         exit 1
+       fi
    ```
+
+   > **Note:** This approach uses `go tool cover -func` and standard POSIX tools (`awk`, `sed`, `bc`), which work on both Linux and macOS runners.
 
 **Deliverable:** Coverage report showing >= 80%. Updated tests.
 
