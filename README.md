@@ -72,24 +72,14 @@ The CI workflow already has a matrix strategy with one Go version. Your tasks:
    - Replace `YOUR_PROJECT_KEY` and `YOUR_ORGANIZATION` with your actual values.
    - Ensure coverage reporting is configured correctly.
 
-3. **Add a SonarCloud job** to the CI workflow:
-   ```yaml
-   sonarcloud:
-     runs-on: ubuntu-latest
-     needs: test
-     steps:
-       - uses: actions/checkout@v4
-         with:
-           fetch-depth: 0
-       - name: Download coverage
-         uses: actions/download-artifact@v4
-         with:
-           name: coverage-1.26
-       - name: SonarCloud Scan
-         uses: SonarSource/sonarqube-scan-action@v5
-         env:
-           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-   ```
+3. **Add a `sonarcloud` job** to the CI workflow that:
+   - Runs after the `test` job (`needs: test`)
+   - Checks out the code with full history (`fetch-depth: 0`)
+   - Downloads the coverage artifact from the test job
+   - Runs the SonarCloud scan using `SonarSource/sonarqube-scan-action@v5`
+   - Passes the `SONAR_TOKEN` as an environment variable
+
+   > **Hint:** Look at the `sonar-project.properties` file to understand what SonarCloud expects.
 
 4. **Add the `SONAR_TOKEN` secret** to your repository settings.
 
@@ -116,35 +106,16 @@ The CI workflow already has a matrix strategy with one Go version. Your tasks:
    - Error paths in the store layer
    - The `Validate()` method edge cases
 
-3. **Add a coverage threshold check** to the CI pipeline:
-   ```yaml
-   - name: Check coverage threshold
-     run: |
-       go test -coverprofile=coverage.out ./...
-       TOTAL=$(go tool cover -func=coverage.out | grep total | awk '{print $3}' | sed 's/%//')
-       echo "Total coverage: ${TOTAL}%"
-       THRESHOLD=80
-       if [ "$(echo "$TOTAL < $THRESHOLD" | bc)" -eq 1 ]; then
-         echo "::error::Coverage ${TOTAL}% is below threshold ${THRESHOLD}%"
-         exit 1
-       fi
-   ```
+3. **Add a coverage threshold check** to the CI pipeline as a step after running tests:
+   - Extract the total coverage percentage from `go tool cover -func`
+   - Fail the build if coverage is below 80%
+   - Use `::error::` to display the error in the GitHub Actions UI
 
-   > **Note:** This approach uses `go tool cover -func` and standard POSIX tools (`awk`, `sed`, `bc`), which work on both Linux and macOS runners.
+   > **Hint:** `go tool cover -func=coverage.out | grep total` gives you the total line. Use `awk` and `sed` to extract the number. Use `bc` for the comparison (works on both Linux and macOS).
 
-4. **Upload a coverage HTML report** as a build artifact so it can be downloaded from the Actions run:
-   ```yaml
-   - name: Generate coverage HTML report
-     run: go tool cover -html=coverage.out -o coverage.html
-
-   - name: Upload coverage artifacts
-     uses: actions/upload-artifact@v4
-     with:
-       name: coverage-report
-       path: |
-         coverage.out
-         coverage.html
-   ```
+4. **Upload a coverage HTML report** as a build artifact:
+   - Generate an HTML report using `go tool cover -html`
+   - Upload it using `actions/upload-artifact@v4` so it can be downloaded from the Actions run
 
 **Deliverable:** Coverage report showing >= 80%. Updated tests. Coverage HTML artifact downloadable from the Actions run.
 
