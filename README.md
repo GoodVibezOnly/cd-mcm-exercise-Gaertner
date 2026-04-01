@@ -219,6 +219,14 @@ Use these prefixes for all commit messages:
 - `fix/<issue-id>-<short-description>`
 - `docs/<short-description>`
 
+### Useful Git Config
+
+```bash
+git config --global core.editor "code --wait"
+git config --global alias.s status
+git config --global alias.lg "log --oneline --graph --all"
+```
+
 ---
 
 ## Grading
