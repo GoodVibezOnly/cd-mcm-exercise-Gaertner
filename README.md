@@ -42,7 +42,7 @@ go build -o api-server ./cmd/api # Build the server binary
 
 ### Task 1: Repository Setup (2 Points)
 
-1. Fork this repository into your own GitHub account. Name it `cd-mcm-exercise-[Nachname]`.
+1. Fork this repository into your own GitHub account. Name it `cd-mcm-exercise-[Nachname]`. **Uncheck** "Copy the `main` branch only" so that all exercise branches are included.
 2. Clone your fork locally.
 3. Verify the project builds and tests pass:
    ```bash
