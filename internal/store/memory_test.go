@@ -1,10 +1,21 @@
 package store
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/mrckurz/CI-CD-MCM/internal/model"
+)
 
 func TestCreateAndGet(t *testing.T) {
-	_ = NewMemoryStore()
-	// TODO: Add test -- create a product and verify GetByID returns it
+	s := NewMemoryStore()
+	created := s.Create(model.Product{Name: "Widget", Price: 9.99})
+	got, err := s.GetByID(created.ID)
+	if err != nil {
+		t.Fatalf("expected no error, got %v", err)
+	}
+	if got.ID != created.ID || got.Name != created.Name || got.Price != created.Price {
+		t.Errorf("expected %+v, got %+v", created, got)
+	}
 }
 
 func TestGetAllEmpty(t *testing.T) {
