@@ -13,7 +13,7 @@ Alexander Gärtner | MC Master @ FH Hagenberg
 
 I expect to learn best practices for CI/CD.
 Also what kind of tools which can be used for these purposes.
-Finally I use this course as motiviation to properly use CI/CD beyond the normal scope of just auto deploying things.
+Finally I use this course as motivation to properly use CI/CD beyond the normal scope of just auto deploying things.
 
 ## Why Continuous Delivery matters for agile teams
 
