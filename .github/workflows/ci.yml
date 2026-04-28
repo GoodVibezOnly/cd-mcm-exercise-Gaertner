@@ -47,12 +47,16 @@ jobs:
           load: true
           tags: product-catalog:${{ github.sha }}
 
+      - name: Lowercase registry owner
+        if: github.ref == 'refs/heads/main'
+        run: echo "OWNER=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       - name: Push to GitHub Container Registry
         if: github.ref == 'refs/heads/main'
         uses: redhat-actions/push-to-registry@v2
         with:
           image: product-catalog
           tags: ${{ github.sha }}
-          registry: ghcr.io/${{ github.repository_owner }}
+          registry: ghcr.io/${{ env.OWNER }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
