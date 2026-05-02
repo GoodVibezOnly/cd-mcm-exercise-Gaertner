@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -77,4 +78,77 @@ func TestGetProductNotFound(t *testing.T) {
 	}
 }
 
-// TODO: Add tests for UpdateProduct, DeleteProduct, and invalid payloads
+func TestUpdateProduct(t *testing.T) {
+	r, _ := setupRouter()
+
+	body := `{"name":"Widget","price":9.99}`
+	req := httptest.NewRequest("POST", "/products", strings.NewReader(body))
+	rr := httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusCreated {
+		t.Fatalf("expected 201, got %d", rr.Code)
+	}
+
+	updated := `{"name":"Widget Pro","price":19.99}`
+	req = httptest.NewRequest("PUT", "/products/1", strings.NewReader(updated))
+	rr = httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("expected 200, got %d", rr.Code)
+	}
+
+	var p map[string]interface{}
+	if err := json.NewDecoder(rr.Body).Decode(&p); err != nil {
+		t.Fatalf("failed to decode response: %v", err)
+	}
+	if p["name"] != "Widget Pro" {
+		t.Errorf("expected name 'Widget Pro', got %v", p["name"])
+	}
+	if p["price"] != 19.99 {
+		t.Errorf("expected price 19.99, got %v", p["price"])
+	}
+}
+
+func TestDeleteProduct(t *testing.T) {
+	r, _ := setupRouter()
+
+	body := `{"name":"Widget","price":9.99}`
+	req := httptest.NewRequest("POST", "/products", strings.NewReader(body))
+	rr := httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusCreated {
+		t.Fatalf("expected 201, got %d", rr.Code)
+	}
+
+	req = httptest.NewRequest("DELETE", "/products/1", nil)
+	rr = httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("expected 200, got %d", rr.Code)
+	}
+
+	req = httptest.NewRequest("GET", "/products/1", nil)
+	rr = httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusNotFound {
+		t.Errorf("expected 404 after delete, got %d", rr.Code)
+	}
+}
+
+func TestCreateInvalidProduct(t *testing.T) {
+	r, _ := setupRouter()
+
+	body := `{"name":"","price":9.99}`
+	req := httptest.NewRequest("POST", "/products", strings.NewReader(body))
+	rr := httptest.NewRecorder()
+	r.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusBadRequest {
+		t.Errorf("expected 400, got %d", rr.Code)
+	}
+}
