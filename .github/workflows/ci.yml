@@ -46,7 +46,7 @@ jobs:
         with:
           go-version: "1.24"
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v4
+        uses: golangci/golangci-lint-action@d6238b002a20823d52840fda27e2d4891c5952dc
         with:
           args: --config .golangci.yml
 
@@ -82,6 +82,6 @@ jobs:
           name: coverage-1.26-ubuntu-latest
 
       - name: SonarCloud scan
-        uses: SonarSource/sonarqube-scan-action@v5
+        uses: SonarSource/sonarqube-scan-action@2f77a1ec69fb1d595b06f35ab27e97605bdef703
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
